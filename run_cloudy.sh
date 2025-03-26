@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --nodes=1
+#SBATCH --nodes=5
 #SBATCH --ntasks-per-node=40
 #SBATCH --time=23:00:00
 #SBATCH --job-name=cloudy_nzone
@@ -19,14 +19,14 @@ module load NiaEnv/2019b gnu-parallel
 # Change to the working directory
 cd /scratch/m/murray/dtolgay/cloudy_runs/z_0/cr_1_CO87_CII_H_O3/cr_1_CO87_CII_H_O3_metallicity_above_minus_2 || exit 1
 running_directories_file_name=cloudy_folders_that_are_gonna_be_run_nzone_problematic.txt
-number_of_parallel_jobs=10
+number_of_parallel_jobs=100
 
 # # Use GNU Parallel to process each directory
 # parallel --jobs "$number_of_parallel_jobs" --joblog "slurm-$SLURM_JOBID.log" '
 #     cd /scratch/m/murray/dtolgay/cloudy_runs/z_0/cr_1_CO87_CII_H_O3/cr_1_CO87_CII_H_O3_metallicity_above_minus_2 || exit 1
 #     cd {} || exit 1
-#     if [[ ! -f "started8.txt" ]]; then
-#         touch "started8.txt"
+#     if [[ ! -f "started9.txt" ]]; then
+#         touch "started9.txt"
 #         cloudy *.in && touch "success.txt"
 #     fi
 # ' :::: "$running_directories_file_name"
@@ -36,8 +36,8 @@ number_of_parallel_jobs=10
 parallel --jobs "$number_of_parallel_jobs" --joblog "slurm-$SLURM_JOBID.log" '
     cd /scratch/m/murray/dtolgay/cloudy_runs/z_0/cr_1_CO87_CII_H_O3/cr_1_CO87_CII_H_O3_metallicity_above_minus_2 || exit 1
     cd {} || exit 1
-    if [[ ! -f "started8.txt" ]]; then
-        touch "started8.txt"
+    if [[ ! -f "started9.txt" ]]; then
+        touch "started9.txt"
         
         # Start cloudy in the background
         cloudy *.in &
