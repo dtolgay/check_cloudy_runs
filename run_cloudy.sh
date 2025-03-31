@@ -2,9 +2,9 @@
 #SBATCH --nodes=5
 #SBATCH --ntasks-per-node=40
 #SBATCH --time=23:00:00
-#SBATCH --job-name=cloudy_nzone
-#SBATCH --output=cloudy_nzone.out
-#SBATCH --error=cloudy_nzone.err
+#SBATCH --job-name=run_cloudy
+#SBATCH --output=run_cloudy.out
+#SBATCH --error=run_cloudy.err
 
 # Limit threading in Python, R, etc.
 export OMP_NUM_THREADS=1
