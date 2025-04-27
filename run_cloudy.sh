@@ -18,15 +18,15 @@ module load NiaEnv/2019b gnu-parallel
 ### Specify the file containing the list of directories and set the parallel job count
 # Change to the working directory
 cd /scratch/m/murray/dtolgay/cloudy_runs/z_0/cr_1_CO87_CII_H_O3/cr_1_CO87_CII_H_O3_metallicity_above_minus_2 || exit 1
-running_directories_file_name=cloudy_folders_that_are_gonna_be_run.txt
-number_of_parallel_jobs=20
+running_directories_file_name=abundance_emissivity_files_not_found.txt
+number_of_parallel_jobs=100
 
 # # Use GNU Parallel to process each directory
 # parallel --jobs "$number_of_parallel_jobs" --joblog "slurm-$SLURM_JOBID.log" '
 #     cd /scratch/m/murray/dtolgay/cloudy_runs/z_0/cr_1_CO87_CII_H_O3/cr_1_CO87_CII_H_O3_metallicity_above_minus_2 || exit 1
 #     cd {} || exit 1
-#     if [[ ! -f "started11.txt" ]]; then
-#         touch "started11.txt"
+#     if [[ ! -f "started12.txt" ]]; then
+#         touch "started12.txt"
 #         cloudy *.in && touch "success.txt"
 #     fi
 # ' :::: "$running_directories_file_name"
@@ -36,8 +36,8 @@ number_of_parallel_jobs=20
 parallel --jobs "$number_of_parallel_jobs" --joblog "slurm-$SLURM_JOBID.log" '
     cd /scratch/m/murray/dtolgay/cloudy_runs/z_0/cr_1_CO87_CII_H_O3/cr_1_CO87_CII_H_O3_metallicity_above_minus_2 || exit 1
     cd {} || exit 1
-    if [[ ! -f "started11.txt" ]]; then
-        touch "started11.txt"
+    if [[ ! -f "started12.txt" ]]; then
+        touch "started12.txt"
         
         # Start cloudy in the background
         cloudy *.in &

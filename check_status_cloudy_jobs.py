@@ -1,38 +1,7 @@
 import os
 import pandas as pd  # type: ignore
 import numpy as np 
-
-def determine_runs_does_not_contain_file(base_fdir, file_name="success.txt"):
-
-    # read dirlist.txt
-    file_path = "dirlist.txt"
-
-    dirlist = []
-    with open(file_path, "r") as file:
-        for line in file:
-            dirlist.append(line.strip())
-
-    success_list = []
-    unrunned_list = []
-    for i, directory in enumerate(dirlist):
-        if os.path.exists(f"{base_fdir}/{directory}/success.txt"):
-            success_list.append(directory)
-        else:
-            unrunned_list.append(directory)
-
-        if (i%1e3 == 0):
-            print(f"Processed {i} files. Remaning {len(dirlist)-i} files.")
-
-    # Write the successfull and unrunned runs to a file
-    with open("successfull_runs.txt", "w") as file:
-        for directory in success_list:
-            file.write(f"{directory}\n")
-
-    with open("unrunned_runs.txt", "w") as file:
-        for directory in unrunned_list:
-            file.write(f"{directory}\n")
-
-    return None 
+import sys
 
 def determine_run_situation(base_fdir, file_identifiers_and_dirs):
 
@@ -63,6 +32,7 @@ def determine_run_situation(base_fdir, file_identifiers_and_dirs):
     file_not_found = []
     keyword_not_found = []
     cloudy_folders_that_are_gonna_be_run = []
+    abundance_emissivity_files_not_found = []
 
     for counter, center in centers.iterrows():
 
@@ -85,6 +55,16 @@ def determine_run_situation(base_fdir, file_identifiers_and_dirs):
                         searched_keyword_found = True  # Mark as found and stop further checks
                         break
                 
+                # Check if abundance and emissivity files exist
+                file_names_to_check = [
+                    f"{fdir}_em.str",
+                    f"{fdir}.ovr"
+                ]
+                for file_name in file_names_to_check:
+                    if not os.path.exists(f"{base_fdir}/{fdir}/{file_name}"):
+                        abundance_emissivity_files_not_found.append(fdir)
+
+
                 # If not "ok", check for other conditions
                 if not searched_keyword_found:
                     for line in lines:
@@ -163,6 +143,13 @@ def determine_run_situation(base_fdir, file_identifiers_and_dirs):
     data.to_csv("cloudy_folders_that_are_gonna_be_run.txt", index=False, header=True, sep=" ")
     print(f"Written cloudy_folders_that_are_gonna_be_run jobs to cloudy_folders_that_are_gonna_be_run.txt")
 
+    # Write the abundance_emissivity_files_not_found data to a file
+    data = pd.DataFrame(abundance_emissivity_files_not_found, columns=[
+        "file_name"
+    ])
+    data.to_csv("abundance_emissivity_files_not_found.txt", index=False, header=True, sep=" ")
+    print(f"Written abundance_emissivity_files_not_found jobs to abundance_emissivity_files_not_found.txt")
+
     return None
 
 
@@ -187,7 +174,9 @@ if __name__ == '__main__':
             },
         }
 
-    base_fdir = "/scratch/m/murray/dtolgay/cloudy_runs/z_0/cr_1_CO87_CII_H_O3/cr_1_CO87_CII_H_O3_metallicity_above_minus_2"
+    # base_fdir = "/scratch/m/murray/dtolgay/cloudy_runs/z_0/cr_1_CO87_CII_H_O3/cr_1_CO87_CII_H_O3_metallicity_above_minus_2"
+
+    base_fdir = sys.argv[1]
 
     determine_run_situation(base_fdir, file_identifiers_and_dirs)
     # determine_runs_does_not_contain_file(base_fdir, file_name="success.txt")
